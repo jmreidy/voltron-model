@@ -61,7 +61,7 @@ Model.build = function(documents) {
 
 
 Object.defineProperties(Model.prototype, {
-  'id': {
+  id: {
     get: function() {
       if (this.attributes) {
         return this.attributes._id;
@@ -70,24 +70,32 @@ Object.defineProperties(Model.prototype, {
       }
     }
   },
-  'get': {
+  get: {
     value: function(attr) {
       return this._attributes[attr];
     }
   },
-  'set': {
+  set: {
     value: function(attr, value) {
       this._attributes[attr] = value;
     }
   },
-  'update': {
+  update: {
     value: function(newAttrs) {
-      for (var key in Object.keys(this)) {
+      var self = this;
+      Object.keys(this).map(function (key) {
         if (newAttrs.hasOwnProperty(key)) {
-          this[key] = newAttrs[key];
+          self[key] = newAttrs[key];
         }
-      }
+      });
+      return this;
     }
+  },
+  inspect: {
+    value: function () {
+      return JSON.stringify(this);
+    }
+
   }
 });
 
