@@ -4,7 +4,7 @@
   "description": "A server/client agnostic wrapper for your models. No finders, no data accessors, just some meta-organization. Plug-and-playable with other Voltron components.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -13,6 +13,10 @@
   "keywords": [
     "model"
   ],
+  "devDependencies": {
+    "mocha": "1.4.x",
+    "sinon": "1.4.x"
+  },
   "author": "Justin Reidy <jmreidy@rzrsharp.net> (http://rzrsharp.net)",
   "license": "BSD",
   "private": true

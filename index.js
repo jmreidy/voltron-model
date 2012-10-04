@@ -1,4 +1,3 @@
-var util = require('util');
 
 module.exports = Model;
 
@@ -12,43 +11,60 @@ function Model(document, schema) {
     }
   });
   if (schema) {
-    var keys = Object.keys(schema);
-    for (var idx in keys) {
-      (function(key) {
-        var property = schema[key];
-        if (!property.get) {
-          property.get = function() {
-            return this.get(key);
-          };
-        }
-        if (!property.set) {
-          property.set = function(val) {
-            this.set(key, val);
-          };
-        }
-        if (property.value) {
-          this.set(key, property.value);
-          delete property.value;
-        }
-        property.enumerable = true;
-        Object.defineProperty(this, key, property);
-      }.bind(this))(keys[idx]);
-    }
+    Model.applySchemaToModel(schema, this);
   }
 }
 
-Model.define = function(constructor, schema) {
-  Fn = function(document) {
+Model.define = function(constructor, schema, options) {
+  var Fn = function(document) {
     Model.call(this, document, schema);
     constructor.call(this, document);
   };
 
   Fn.build = Model.build;
-  util.inherits(Fn, Model);
+  Fn.prototype = Object.create(Model.prototype, {
+    constructor: {
+      value: constructor,
+      enumerable: false
+    }
+  });
+
+  if (options && options.hasOwnProperty('primaryKey')) {
+    Object.defineProperty(Fn.prototype, '_primaryKey', {
+        value: options.primaryKey,
+        enumerable: false
+    });
+  }
+
 
   return Fn;
 };
 
+
+Model.applySchemaToModel = function (schema, model) {
+  var keys = Object.keys(schema);
+  for (var idx in keys) {
+    (function(key) {
+      var property = schema[key];
+      if (!property.get) {
+        property.get = function() {
+          return model.get(key);
+        };
+      }
+      if (!property.set) {
+        property.set = function(val) {
+          model.set(key, val);
+        };
+      }
+      if (property.value) {
+        model.set(key, property.value);
+        delete property.value; //value screws with defineProperty
+      }
+      property.enumerable = true;
+      Object.defineProperty(model, key, property);
+    })(keys[idx]);
+  }
+};
 
 Model.build = function(documents) {
   var models = [];
@@ -63,8 +79,19 @@ Model.build = function(documents) {
 Object.defineProperties(Model.prototype, {
   id: {
     get: function() {
-      if (this.attributes) {
-        return this.attributes._id;
+      var key;
+      if (this._primaryKey) {
+        key = this._primaryKey;
+      }
+      else if (this._primaryKey === false) {
+        key = undefined;
+      }
+      else {
+        key = 'id';
+      }
+
+      if (this._attributes) {
+        return this._attributes[key];
       } else {
         return undefined;
       }
@@ -93,9 +120,13 @@ Object.defineProperties(Model.prototype, {
   },
   inspect: {
     value: function () {
-      return JSON.stringify(this);
+      var self = this;
+      var output = 'Instance of ' + this.constructor + '\n';
+      Object.keys(this).map(function (key) {
+        output += '' + key + ': ' + self[key] + '\n';
+      });
+      return output;
     }
-
   }
 });
 
