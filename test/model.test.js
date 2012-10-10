@@ -122,6 +122,9 @@ describe('VoltronModel', function () {
 
       //properties not defined in schema don't exist
       assert.ok(model.hasOwnProperty('occupation') === false);
+
+      //schema is unmodified
+      assert.deepEqual(schema.name, {});
     });
 
     it('defines default values for fields with \'value\' attribute', function () {

@@ -46,21 +46,27 @@ Model.define = function (constructor, schema, options) {
 Model.applySchemaToModel = function (schema, model) {
   var keys = Object.keys(schema);
   for (var idx in keys) {
-    (function(key) {
-      var property = schema[key];
-      if (!property.get) {
-        property.get = function() {
+    (function (key) {
+      var schemaProp = schema[key];
+      var property = {};
+      if (!schemaProp.get) {
+        property.get = function () {
           return model.get(key);
         };
       }
-      if (!property.set) {
-        property.set = function(val) {
+      else {
+        property.get = schemaProp.get;
+      }
+      if (!schemaProp.set) {
+        property.set = function (val) {
           model.set(key, val);
         };
       }
-      if (property.value) {
-        model.set(key, property.value);
-        delete property.value; //value screws with defineProperty
+      else {
+        property.set = schemaProp.set;
+      }
+      if (schemaProp.value) {
+        model.set(key, schemaProp.value);
       }
       property.enumerable = true;
       Object.defineProperty(model, key, property);
