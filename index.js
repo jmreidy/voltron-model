@@ -6,7 +6,7 @@ function Model(document, schema) {
     document = {};
   }
   Object.defineProperty(this, '_attributes', {
-    get: function() {
+    get: function () {
       return document;
     }
   });
@@ -15,8 +15,8 @@ function Model(document, schema) {
   }
 }
 
-Model.define = function(constructor, schema, options) {
-  var Fn = function(document) {
+Model.define = function (constructor, schema, options) {
+  var Fn = function (document) {
     Model.call(this, document, schema);
     constructor.call(this, document);
   };
@@ -66,7 +66,7 @@ Model.applySchemaToModel = function (schema, model) {
   }
 };
 
-Model.build = function(documents) {
+Model.build = function (documents) {
   var models = [];
   var count = documents.length;
   for (var i = 0; i < count; i++) {
@@ -78,7 +78,7 @@ Model.build = function(documents) {
 
 Object.defineProperties(Model.prototype, {
   id: {
-    get: function() {
+    get: function () {
       var key;
       if (this._primaryKey) {
         key = this._primaryKey;
@@ -98,17 +98,17 @@ Object.defineProperties(Model.prototype, {
     }
   },
   get: {
-    value: function(attr) {
+    value: function (attr) {
       return this._attributes[attr];
     }
   },
   set: {
-    value: function(attr, value) {
+    value: function (attr, value) {
       this._attributes[attr] = value;
     }
   },
   update: {
-    value: function(newAttrs) {
+    value: function (newAttrs) {
       var self = this;
       Object.keys(this).map(function (key) {
         if (newAttrs.hasOwnProperty(key)) {
