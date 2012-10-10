@@ -1,4 +1,5 @@
 var VoltronModel = require('../');
+var Q = require('q');
 
 describe('VoltronModel', function () {
 
@@ -195,16 +196,61 @@ describe('VoltronModel', function () {
       assert.ok(inspection.match(/name\: Abe/));
     });
 
-    it('should have an update function that writes ' +
-    'to enumerable accesors from a provided hash', function () {
-      model.update({name: 'Seth', age: 25, gender: 'male'});
+    describe('the update function', function () {
 
-      assert.equal(model.name, 'Seth');
-      assert.equal(model.age, 25);
+      it('should return a promise', function (done) {
+        model.update()
+          .then(function () {
+            assert.ok('Promise is returned');
+          }).nend(done);
+      });
 
-      //hash keys not included in schema aren't written
-      assert.ok(model._attributes.hasOwnProperty('gender') === false);
-      assert.ok(model.hasOwnProperty('gender') === false);
+      it('should write to enumerable accesors from a provided hash', function (done) {
+        model.update({name: 'Seth', age: 25, gender: 'male'})
+          .then(function () {
+            assert.equal(model.name, 'Seth');
+            assert.equal(model.age, 25);
+
+            //hash keys not included in schema aren't written
+            assert.ok(model._attributes.hasOwnProperty('gender') === false);
+            assert.ok(model.hasOwnProperty('gender') === false);
+          }).nend(done);
+      });
+
+      describe('if a beforeUpdate hook exists', function () {
+        var hook;
+
+        beforeEach(function () {
+          hook = sinon.spy(function (attrs) {
+            attrs.name = 'Bob';
+            return Q.when();
+          });
+          sinon.spy(model, 'update');
+          Model.prototype.beforeUpdate = hook;
+        });
+
+        afterEach(function () {
+          model.update.restore();
+          Model.prototype.beforeUpdate = undefined;
+        });
+
+        it('should call the hook before calling update', function (done) {
+          model.update({name: 'Seth', age: 25, gender: 'male'})
+            .then(function () {
+              assert.ok(hook.calledOnce);
+              assert.ok(model.update.calledWith({name: 'Bob', age: 25, gender: 'male'}));
+            }).nend(done);
+        });
+
+        it('should update as expected', function (done) {
+          model.update({name: 'Seth', age: 25, gender: 'male'})
+            .then(function () {
+              assert.equal(model.name, 'Bob');
+            }).nend(done);
+        });
+
+      });
+
     });
 
     describe('\'id\' getter', function () {

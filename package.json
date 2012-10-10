@@ -13,6 +13,10 @@
   "keywords": [
     "model"
   ],
+  "dependencies": {
+    "VoltronHooks": "git://github.com/jmreidy/VoltronHooks.git#master",
+    "q": "~0.8.9"
+  },
   "devDependencies": {
     "mocha": "1.4.x",
     "sinon": "1.4.x"

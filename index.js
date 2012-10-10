@@ -1,3 +1,5 @@
+var VoltronHooks = require('voltron-hooks');
+var Q = require('q');
 
 module.exports = Model;
 
@@ -110,13 +112,15 @@ Object.defineProperties(Model.prototype, {
   update: {
     value: function (newAttrs) {
       var self = this;
-      Object.keys(this).map(function (key) {
-        if (newAttrs.hasOwnProperty(key)) {
-          self[key] = newAttrs[key];
-        }
-      });
-      return this;
-    }
+      if (newAttrs) {
+        Object.keys(this).map(function (key) {
+          if (newAttrs.hasOwnProperty(key)) {
+            self[key] = newAttrs[key];
+          }
+        });
+      }
+      return Q.when(this);
+    }, writable: true
   },
   inspect: {
     value: function () {
@@ -130,6 +134,4 @@ Object.defineProperties(Model.prototype, {
   }
 });
 
-
-
-
+VoltronHooks.defineBeforeHook(Model.prototype, 'update');
