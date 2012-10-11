@@ -31,6 +31,8 @@ Model.define = function (constructor, schema, options) {
     }
   });
 
+  VoltronHooks.defineBeforeHook(Fn.prototype, 'update');
+
   if (options && options.hasOwnProperty('primaryKey')) {
     Object.defineProperty(Fn.prototype, '_primaryKey', {
         value: options.primaryKey,
@@ -140,4 +142,3 @@ Object.defineProperties(Model.prototype, {
   }
 });
 
-VoltronHooks.defineBeforeHook(Model.prototype, 'update');
