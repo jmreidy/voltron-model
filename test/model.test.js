@@ -168,7 +168,28 @@ describe('VoltronModel', function () {
 
       assert.ok(getter.calledOnce);
     });
+
+    it('casts values in setters for fields with \'type\' attribute', function () {
+      var stringType = {
+        cast: function (value) {
+          return "" + value;
+        }
+      };
+      var schema = {
+        name: {
+          type: stringType
+        }
+      };
+
+      VoltronModel.applySchemaToModel(schema, model);
+
+      model.name = 1;
+
+      assert.equal(model.get('name'), '1');
+      assert.equal(typeof model.get('name'), 'string');
+    });
   });
+
 
   describe('VoltronModel.prototype', function () {
     var model, Model;

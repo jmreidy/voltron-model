@@ -59,6 +59,7 @@ Model.applySchemaToModel = function (schema, model) {
       else {
         property.get = schemaProp.get;
       }
+
       if (!schemaProp.set) {
         property.set = function (val) {
           model.set(key, val);
@@ -67,9 +68,20 @@ Model.applySchemaToModel = function (schema, model) {
       else {
         property.set = schemaProp.set;
       }
+
+      if (schemaProp.type) {
+        var _set = property.set;
+        property.set = function (value) {
+          value = schemaProp.type.cast(value);
+          _set.call(this, value);
+        };
+      }
+
       if (schemaProp.value) {
         model.set(key, schemaProp.value);
       }
+
+
       property.enumerable = true;
       Object.defineProperty(model, key, property);
     })(keys[idx]);
