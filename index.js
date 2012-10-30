@@ -51,8 +51,8 @@ Model.applySchemaToModel = function (schema, model) {
     var property = {};
     var modelKey;
 
-    if (schemaProp.mapKey) {
-      modelKey = schemaProp.mapKey;
+    if (schemaProp.fieldName) {
+      modelKey = schemaProp.fieldName;
     }
     else {
       modelKey = key;

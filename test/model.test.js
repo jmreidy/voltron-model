@@ -127,6 +127,22 @@ describe('VoltronModel', function () {
       assert.deepEqual(schema.name, {});
     });
 
+
+    it('maps to a named field with \'fieldName\' attribute', function () {
+      model = new Model({underscore_name: 'Carrie'});
+      var schema = {
+        name: {
+          fieldName: 'underscore_name'
+        }
+      };
+      VoltronModel.applySchemaToModel(schema, model);
+
+      assert.equal(model.name, 'Carrie');
+
+      model.name = 'Brody';
+      assert.equal(model._attributes.underscore_name, 'Brody');
+    });
+
     it('defines default values for fields with \'value\' attribute', function () {
       var schema = {
         name: {
