@@ -46,46 +46,50 @@ Model.define = function (constructor, schema, options) {
 
 
 Model.applySchemaToModel = function (schema, model) {
-  var keys = Object.keys(schema);
-  for (var idx in keys) {
-    (function (key) {
-      var schemaProp = schema[key];
-      var property = {};
-      if (!schemaProp.get) {
-        property.get = function () {
-          return model.get(key);
-        };
-      }
-      else {
-        property.get = schemaProp.get;
-      }
+  Object.keys(schema).forEach(function (key) {
+    var schemaProp = schema[key];
+    var property = {};
+    var modelKey;
 
-      if (!schemaProp.set) {
-        property.set = function (val) {
-          model.set(key, val);
-        };
-      }
-      else {
-        property.set = schemaProp.set;
-      }
+    if (schemaProp.mapKey) {
+      modelKey = schemaProp.mapKey;
+    }
+    else {
+      modelKey = key;
+    }
 
-      if (schemaProp.type) {
-        var _set = property.set;
-        property.set = function (value) {
-          value = schemaProp.type.cast(value);
-          _set.call(this, value);
-        };
-      }
+    if (!schemaProp.get) {
+      property.get = function () {
+        return model.get(modelKey);
+      };
+    }
+    else {
+      property.get = schemaProp.get;
+    }
 
-      if (schemaProp.value) {
-        model.set(key, schemaProp.value);
-      }
+    if (!schemaProp.set) {
+      property.set = function (val) {
+        model.set(modelKey, val);
+      };
+    }
+    else {
+      property.set = schemaProp.set;
+    }
 
+    if (schemaProp.type) {
+      var _set = property.set;
+      property.set = function (value) {
+        value = schemaProp.type.cast(value);
+        _set.call(this, value);
+      };
+    }
 
-      property.enumerable = true;
-      Object.defineProperty(model, key, property);
-    })(keys[idx]);
-  }
+    if (schemaProp.value) {
+      model.set(modelKey, schemaProp.value);
+    }
+    property.enumerable = true;
+    Object.defineProperty(model, key, property);
+  });
 };
 
 Model.build = function (documents) {
