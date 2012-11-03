@@ -7,9 +7,15 @@ function Model(document, schema) {
   if (!document) {
     document = {};
   }
+  var virtuals = {};
   Object.defineProperty(this, '_attributes', {
     get: function () {
       return document;
+    }
+  });
+  Object.defineProperty(this, '_virtuals', {
+    get: function () {
+      return virtuals;
     }
   });
   if (schema) {
@@ -131,6 +137,16 @@ Object.defineProperties(Model.prototype, {
   set: {
     value: function (attr, value) {
       this._attributes[attr] = value;
+    }
+  },
+  getVirtual: {
+    value: function (attr) {
+      return this._virtuals[attr];
+    }
+  },
+  setVirtual: {
+    value: function (attr, value) {
+      this._virtuals[attr] = value;
     }
   },
   update: {
