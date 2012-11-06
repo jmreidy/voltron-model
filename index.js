@@ -64,34 +64,46 @@ Model.applySchemaToModel = function (schema, model) {
       modelKey = key;
     }
 
-    if (!schemaProp.get) {
+    if (schemaProp.virtual) {
+      var virtualField = schemaProp.virtual;
       property.get = function () {
-        return model.get(modelKey);
+        return model.getVirtual(virtualField);
       };
-    }
-    else {
-      property.get = schemaProp.get;
-    }
-
-    if (!schemaProp.set) {
-      property.set = function (val) {
-        model.set(modelKey, val);
-      };
-    }
-    else {
-      property.set = schemaProp.set;
-    }
-
-    if (schemaProp.type) {
-      var _set = property.set;
       property.set = function (value) {
-        value = schemaProp.type.cast(value);
-        _set.call(this, value);
+        model.setVirtual(virtualField, value);
       };
     }
+    else {
+      if (!schemaProp.get) {
+        property.get = function () {
+          return model.get(modelKey);
+        };
+      }
+      else {
+        property.get = schemaProp.get;
+      }
 
-    if (schemaProp.value) {
-      model.set(modelKey, schemaProp.value);
+      if (!schemaProp.set) {
+        property.set = function (val) {
+          model.set(modelKey, val);
+        };
+      }
+      else {
+        property.set = schemaProp.set;
+      }
+
+      if (schemaProp.type) {
+        var _set = property.set;
+        property.set = function (value) {
+          value = schemaProp.type.cast(value);
+          _set.call(this, value);
+        };
+      }
+
+      if (schemaProp.value) {
+        model.set(modelKey, schemaProp.value);
+      }
+
     }
     property.enumerable = true;
     Object.defineProperty(model, key, property);

@@ -32,6 +32,13 @@ describe('VoltronModel', function () {
       assert.deepEqual(model._attributes, {});
     });
 
+    it('should create a a virtuals hash', function () {
+      Model = VoltronModel.define(constructor);
+      var model = new Model();
+
+      assert.deepEqual(model._virtuals, {});
+    });
+
     it('should apply a provided schema', function () {
       var schema = {'field': {}};
       Model = VoltronModel.define(constructor, schema);
@@ -185,6 +192,21 @@ describe('VoltronModel', function () {
       assert.ok(getter.calledOnce);
     });
 
+    it('configures virtual accessores for fields with \'virtual\' attribute', function () {
+      var name = 'Brody';
+      var schema = {
+        name: {
+          virtual: 'virtualName'
+        }
+      };
+      VoltronModel.applySchemaToModel(schema, model);
+
+      model.name = name;
+
+      assert.equal(model._virtuals.virtualName, name);
+      assert.equal(model.name, name);
+    });
+
     it('casts values in setters for fields with \'type\' attribute', function () {
       var stringType = {
         cast: function (value) {
@@ -226,7 +248,21 @@ describe('VoltronModel', function () {
     });
 
     it('should have a \'get\' function that gets from _attributes', function () {
-      assert.equal(model.get('name'), model._attributes.name);
+      model._attributes.name = 'Jess';
+
+      assert.equal(model.get('name'), 'Jess');
+    });
+
+    it('should have a \'setVirtual\' function that writes to _virtuals', function () {
+      model.setVirtual('virtualName', 'Whip');
+
+      assert.equal(model._virtuals.virtualName, 'Whip');
+    });
+
+    it('should have a \'getVirtual\' function that gets from _virtuals', function () {
+      model._virtuals.virtualName = 'Clint';
+
+      assert.equal(model.getVirtual('virtualName'), 'Clint');
     });
 
     it('should have an inspect function that writes the instance to string', function () {
