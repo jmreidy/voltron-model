@@ -32,7 +32,7 @@ var UserModel = VoltronModel.define(User, { name: {} }, {});
 function User () {};
 
 var user = new UserModel();
-assert.equal(user.constructor,  constructor); //ok
+assert.equal(user.constructor,  User); //ok
 ```
 
 ### Model Constructors
