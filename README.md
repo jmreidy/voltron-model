@@ -15,7 +15,7 @@ overly intrusive into your overall architecture.
 It's important to note that voltron-model does NOT provide integration to your data store;
 Models simply wrap a hash of data values. This approach provides you with the flexibility of
 integrating with your backend in whatever way you choose. voltron.io does provide a data adapter
-through [voltron-adapter](https://github.com/jmreidy/voltron-adapter/tree/0.1.x).
+through [voltron-adapter](https://github.com/jmreidy/voltron-adapter).
 
 ## Defining Models
 
