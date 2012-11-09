@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "voltron-hooks": "git://github.com/jmreidy/voltron-hooks.git#master",
-    "q": "~0.8.9"
+    "q": "~0.8.10"
   },
   "devDependencies": {
     "mocha": "1.4.x",
