@@ -176,11 +176,19 @@ Object.defineProperties(Model.prototype, {
   },
   inspect: {
     value: function () {
-      var self = this;
       var output = 'Instance of ' + this.constructor + '\n';
       Object.keys(this).map(function (key) {
-        output += '' + key + ': ' + self[key] + '\n';
-      });
+        output += '' + key + ': ' + this[key] + '\n';
+      }.bind(this));
+      return output;
+    }
+  },
+  toJSON: {
+    value: function () {
+      var output = { id: this.id };
+      Object.keys(this).map(function (key) {
+        output[key] = this[key];
+      }.bind(this));
       return output;
     }
   }
