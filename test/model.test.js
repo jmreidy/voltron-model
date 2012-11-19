@@ -278,7 +278,7 @@ describe('VoltronModel', function () {
         model.update()
           .then(function () {
             assert.ok('Promise is returned');
-          }).nend(done);
+          }).nodeify(done);
       });
 
       it('should write to enumerable accesors from a provided hash', function (done) {
@@ -290,7 +290,7 @@ describe('VoltronModel', function () {
             //hash keys not included in schema aren't written
             assert.ok(model._attributes.hasOwnProperty('gender') === false);
             assert.ok(model.hasOwnProperty('gender') === false);
-          }).nend(done);
+          }).nodeify(done);
       });
 
       describe('if a beforeUpdate hook exists', function () {
@@ -315,14 +315,14 @@ describe('VoltronModel', function () {
             .then(function () {
               assert.ok(hook.calledOnce);
               assert.ok(model.update.calledWith({name: 'Bob', age: 25, gender: 'male'}));
-            }).nend(done);
+            }).nodeify(done);
         });
 
         it('should update as expected', function (done) {
           model.update({name: 'Seth', age: 25, gender: 'male'})
             .then(function () {
               assert.equal(model.name, 'Bob');
-            }).nend(done);
+            }).nodeify(done);
         });
 
       });
