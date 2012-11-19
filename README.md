@@ -141,7 +141,6 @@ each data hash.
 
 ## Roadmap
 
-* Add typeCasters for frequently used types: Strings, Arrays, Numbers, Booleans, Dates.
 * Configure `beforeUpdate` hook to work with callbacks in addition to promises.
 * Note that validation will be added as a separate component of voltron.io, voltron-validator,
 or by other library.
