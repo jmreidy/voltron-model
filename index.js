@@ -2,6 +2,7 @@ var VoltronHooks = require('voltron-hooks');
 var Q = require('q');
 
 module.exports = Model;
+Model.Types = require('./lib/types');
 
 function Model(document, schema) {
   if (!document) {
