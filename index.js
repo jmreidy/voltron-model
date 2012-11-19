@@ -4,6 +4,20 @@ var Q = require('q');
 module.exports = Model;
 Model.Types = require('./lib/types');
 
+var isArray = Array.isArray || function(obj) {
+  return toString.call(obj) == '[object Array]';
+};
+
+var updateAttributes = function (self, newAttrs) {
+  if (newAttrs) {
+    Object.keys(self).map(function (key) {
+      if (newAttrs.hasOwnProperty(key)) {
+        self[key] = newAttrs[key];
+      }
+    });
+  }
+};
+
 function Model(document, schema) {
   if (!document) {
     document = {};
@@ -31,6 +45,7 @@ Model.define = function (constructor, schema, options) {
   };
 
   Fn.build = Model.build;
+  Fn.cast = Model.cast;
   Fn.prototype = Object.create(Model.prototype, {
     constructor: {
       value: constructor,
@@ -120,6 +135,28 @@ Model.build = function (documents) {
   return models;
 };
 
+/*
+ * Allow voltron-models to serve as type-casters
+ * in other model schemas
+ */
+Model.cast = function (models) {
+  var Self = this;
+  var castModel = function (item) {
+    var model = new Self();
+    updateAttributes(model, item);
+    return model;
+  };
+
+  if (isArray(models)) {
+    models = models.map(castModel);
+  }
+  else {
+    models = castModel(models);
+  }
+
+  return models;
+};
+
 
 Object.defineProperties(Model.prototype, {
   id: {
@@ -164,14 +201,7 @@ Object.defineProperties(Model.prototype, {
   },
   update: {
     value: function (newAttrs) {
-      var self = this;
-      if (newAttrs) {
-        Object.keys(this).map(function (key) {
-          if (newAttrs.hasOwnProperty(key)) {
-            self[key] = newAttrs[key];
-          }
-        });
-      }
+      updateAttributes(this, newAttrs);
       return Q.when(this);
     }, writable: true
   },

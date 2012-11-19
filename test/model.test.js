@@ -78,6 +78,10 @@ describe('VoltronModel', function () {
       assert.ok(Model.build);
     });
 
+    it('should add a static \'cast\' function to generated Model', function () {
+      assert.ok(Model.cast);
+    });
+
     it('should set generated models to be instances of Contructor', function () {
       assert.equal((new Model()).constructor,  constructor);
     });
@@ -226,6 +230,44 @@ describe('VoltronModel', function () {
       assert.equal(model.get('name'), '1');
       assert.equal(typeof model.get('name'), 'string');
     });
+  });
+
+  describe('#cast', function () {
+    var Model;
+
+    beforeEach(function () {
+      var constructor = function ModelFn () {};
+      Model = VoltronModel.define(constructor, {
+        name: { fieldName: 'fullName' },
+        age: {}
+      });
+    });
+
+    it('should create a new Model instance from a single argument', function () {
+      var result = Model.cast({name: 'foo', age: 27});
+      assert.ok(result instanceof Model);
+      assert.equal(result.name, 'foo');
+      assert.equal(result.age, 27);
+    });
+
+    it('should create an array of Model instances from an array arg', function () {
+      var objects = [{name: 'foo', age: 27}, {name: 'bar', age: '18'}];
+      var results = Model.cast(objects);
+      results.forEach(function (result, idx) {
+        assert.ok(result instanceof Model);
+        assert.equal(result.name, objects[idx].name);
+        assert.equal(result.age, objects[idx].age);
+      });
+    });
+
+    it('should pass through existing model instances without casting', function () {
+      var result = Model.cast(new Model({fullName: 'foobar', age: 30}));
+      assert.ok(result instanceof Model);
+      assert.equal(result.name, 'foobar');
+      assert.equal(result.age, 30);
+
+    });
+
   });
 
 
