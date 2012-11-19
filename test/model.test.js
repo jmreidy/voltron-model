@@ -265,7 +265,6 @@ describe('VoltronModel', function () {
       assert.ok(result instanceof Model);
       assert.equal(result.name, 'foobar');
       assert.equal(result.age, 30);
-
     });
 
   });

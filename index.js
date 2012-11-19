@@ -108,19 +108,19 @@ Model.applySchemaToModel = function (schema, model) {
         property.set = schemaProp.set;
       }
 
-      if (schemaProp.type) {
-        var _set = property.set;
-        property.set = function (value) {
-          value = schemaProp.type.cast(value);
-          _set.call(this, value);
-        };
-      }
-
       if (schemaProp.value) {
         model.set(modelKey, schemaProp.value);
       }
-
     }
+
+    if (schemaProp.type) {
+      var _set = property.set;
+      property.set = function (value) {
+        value = schemaProp.type.cast(value);
+        _set.call(this, value);
+      };
+    }
+
     property.enumerable = true;
     Object.defineProperty(model, key, property);
   });

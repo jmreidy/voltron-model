@@ -1,6 +1,6 @@
 {
   "name": "voltron-model",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A server/client agnostic wrapper for your models. No finders, no data accessors, just some meta-organization. Plug-and-playable with other Voltron components.",
   "main": "index.js",
   "scripts": {
