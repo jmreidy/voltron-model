@@ -220,15 +220,20 @@ describe('VoltronModel', function () {
       var schema = {
         name: {
           type: stringType
+        },
+        virtualName: {
+          virtual: 'vname',
+          type: stringType
         }
       };
 
       VoltronModel.applySchemaToModel(schema, model);
 
       model.name = 1;
+      model.virtualName = 2;
 
-      assert.equal(model.get('name'), '1');
-      assert.equal(typeof model.get('name'), 'string');
+      assert.strictEqual(model.get('name'), '1');
+      assert.strictEqual(model.getVirtual('vname'), '2');
     });
   });
 
