@@ -309,7 +309,7 @@ describe('VoltronModel', function () {
     it('should have an inspect function that writes the instance to string', function () {
       var inspection = model.inspect();
 
-      assert.ok(inspection.match(/Instance of function ModelFn/));
+      assert.ok(inspection.match(/ModelFn/));
       assert.ok(inspection.match(/name\: Abe/));
     });
 

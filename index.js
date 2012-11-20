@@ -207,10 +207,18 @@ Object.defineProperties(Model.prototype, {
   },
   inspect: {
     value: function () {
-      var output = 'Instance of ' + this.constructor + '\n';
+      var output = '';
+      var constructorName = this.constructor
+        .toString()
+        .match(/function\s?(\w+)/)[1];
+      output += constructorName + ' { \n';
+      if (this.id) {
+        output += '  id: ' + this.id + '\n';
+      }
       Object.keys(this).map(function (key) {
-        output += '' + key + ': ' + this[key] + '\n';
+        output += '  ' + key + ': ' + this[key] + '\n';
       }.bind(this));
+      output = output.replace(/\n$/,' }');
       return output;
     }
   },
