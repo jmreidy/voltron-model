@@ -245,7 +245,7 @@ describe('VoltronModel', function () {
       Model = VoltronModel.define(constructor, {
         name: { fieldName: 'fullName' },
         age: {}
-      });
+      }, {primaryKey: 'modelId'});
     });
 
     it('should create a new Model instance from a single argument', function () {
@@ -272,6 +272,11 @@ describe('VoltronModel', function () {
       assert.equal(result.age, 30);
     });
 
+    it('should assign an id if the cast value has an id', function () {
+      var result = Model.cast({name: 'foo', age: 19, id: 124});
+      assert.equal(result.name, 'foo');
+      assert.equal(result._attributes.modelId,  124);
+    });
   });
 
 

@@ -17,6 +17,14 @@ var updateAttributes = function (self, newAttrs) {
     });
   }
 };
+var updateId = function (model, Model, item) {
+  if (Model.prototype._primaryKey) {
+    var pk = Model.prototype._primaryKey;
+    if (item.id) {
+      model.set(pk, item.id);
+    }
+  }
+};
 
 function Model(document, schema) {
   if (!document) {
@@ -144,6 +152,7 @@ Model.cast = function (models) {
   var castModel = function (item) {
     var model = new Self();
     updateAttributes(model, item);
+    updateId(model, Self, item);
     return model;
   };
 
