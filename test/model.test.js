@@ -191,8 +191,7 @@ describe('VoltronModel', function () {
         }
       };
       VoltronModel.applySchemaToModel(schema, model);
-      model.name;
-
+      assert.ok(model.name);
       assert.ok(getter.calledOnce);
     });
 
@@ -292,38 +291,61 @@ describe('VoltronModel', function () {
       model = new Model({name: 'Abe', age: 82});
     });
 
-    it('should have a \'set\' function that writes to _attributes', function () {
-      model.set('name', 'Boy Blue');
+    describe('#set', function () {
+      it('should write to _attributes', function () {
+        model.set('name', 'Boy Blue');
 
-      assert.equal(model._attributes.name, 'Boy Blue');
+        assert.equal(model._attributes.name, 'Boy Blue');
+      });
     });
 
-    it('should have a \'get\' function that gets from _attributes', function () {
-      model._attributes.name = 'Jess';
+    describe('#get', function () {
+      it('should get from _attributes', function () {
+        model._attributes.name = 'Jess';
 
-      assert.equal(model.get('name'), 'Jess');
+        assert.equal(model.get('name'), 'Jess');
+      });
     });
 
-    it('should have a \'setVirtual\' function that writes to _virtuals', function () {
-      model.setVirtual('virtualName', 'Whip');
+    describe('#setVirtual', function () {
+      it('should write to _virtuals', function () {
+        model.setVirtual('virtualName', 'Whip');
 
-      assert.equal(model._virtuals.virtualName, 'Whip');
+        assert.equal(model._virtuals.virtualName, 'Whip');
+      });
     });
 
-    it('should have a \'getVirtual\' function that gets from _virtuals', function () {
-      model._virtuals.virtualName = 'Clint';
+    describe('#getVirtual', function () {
+      it('should get from _virtuals', function () {
+        model._virtuals.virtualName = 'Clint';
 
-      assert.equal(model.getVirtual('virtualName'), 'Clint');
+        assert.equal(model.getVirtual('virtualName'), 'Clint');
+      });
     });
 
-    it('should have an inspect function that writes the instance to string', function () {
-      var inspection = model.inspect();
+    describe('#inspect', function () {
+      it('should write the instance to string', function () {
+        var inspection = model.inspect();
 
-      assert.ok(inspection.match(/ModelFn/));
-      assert.ok(inspection.match(/name\: Abe/));
+        assert.ok(inspection.match(/ModelFn/));
+        assert.ok(inspection.match(/name\: Abe/));
+      });
     });
 
-    describe('the update function', function () {
+    describe('#fieldNameFor', function () {
+      it('should return the field name for the named property', function () {
+
+      });
+
+      describe('if passed \'id\'', function () {
+        it('should return the name of the primarykey / id field', function () {
+
+        });
+      });
+    });
+
+
+    describe('#update', function () {
 
       it('should return a promise', function (done) {
         model.update()
@@ -380,7 +402,7 @@ describe('VoltronModel', function () {
 
     });
 
-    describe('\'id\' getter', function () {
+    describe('#id getter', function () {
 
       it('should return a defined primaryKey value from _attributes', function () {
         var constructor = function ModelFn () {};
@@ -422,8 +444,5 @@ describe('VoltronModel', function () {
 
     });
   });
-
-
-
 
 });
