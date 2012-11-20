@@ -82,6 +82,10 @@ describe('VoltronModel', function () {
       assert.ok(Model.cast);
     });
 
+    it('should add a static \'fields\' function to generated Model', function () {
+      assert.ok(Model.fields);
+    });
+
     it('should set generated models to be instances of Contructor', function () {
       assert.equal((new Model()).constructor,  constructor);
     });
@@ -103,6 +107,31 @@ describe('VoltronModel', function () {
     beforeEach(function () {
       Model = VoltronModel.define(function () {});
       model = new Model();
+    });
+
+    describe('adds a fieldNameFor method to the generated Model', function () {
+
+      it('should return a named schema _attributes key', function () {
+        var schema = {
+          name: {fieldName: 'fullName'},
+          age: {}
+        };
+        VoltronModel.applySchemaToModel(schema, model);
+
+        assert.equal(model.fieldNameFor('name'), 'fullName');
+        assert.equal(model.fieldNameFor('age'), 'age');
+      });
+
+      it('should return undefined for virtual attributes', function () {
+        var schema = {
+          name: {fieldName: 'fullName'},
+          age: {virtual: 'age'}
+        };
+
+        VoltronModel.applySchemaToModel(schema, model);
+
+        assert.strictEqual(model.fieldNameFor('age'), undefined);
+      });
     });
 
     it('defines enumerable fields on generated Models', function () {
@@ -278,6 +307,29 @@ describe('VoltronModel', function () {
     });
   });
 
+  describe('#fields', function () {
+    var Model;
+
+    beforeEach(function () {
+      var constructor = function ModelFn () {};
+      Model = VoltronModel.define(constructor, {
+        name: { fieldName: 'fullName' },
+        age: {}
+      }, {primaryKey: 'modelId'});
+    });
+
+    it('should return the names of all _attributes keys from the schema', function () {
+      var fields = Model.fields();
+      assert.ok(fields.indexOf('fullName') > -1);
+      assert.ok(fields.indexOf('age') > -1);
+      assert.ok(fields.indexOf('name') === -1);
+    });
+
+    it('should return the name of the primaryKey field', function () {
+      var fields = Model.fields();
+      assert.ok(fields.indexOf('modelId') > -1);
+    });
+  });
 
   describe('VoltronModel.prototype', function () {
     var model, Model;

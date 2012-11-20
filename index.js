@@ -54,6 +54,8 @@ Model.define = function (constructor, schema, options) {
 
   Fn.build = Model.build;
   Fn.cast = Model.cast;
+  Fn.fields = Model.fields(schema);
+
   Fn.prototype = Object.create(Model.prototype, {
     constructor: {
       value: constructor,
@@ -70,12 +72,29 @@ Model.define = function (constructor, schema, options) {
     });
   }
 
-
   return Fn;
 };
 
 
 Model.applySchemaToModel = function (schema, model) {
+  Object.defineProperty(model, 'fieldNameFor', {
+    value: function (key) {
+      var prop = schema[key];
+      if (prop) {
+        if (prop.virtual) {
+          key = undefined;
+        }
+        else if (prop.fieldName) {
+          key = prop.fieldName;
+        }
+      }
+      else {
+        key = undefined;
+      }
+      return key;
+    }
+  });
+
   Object.keys(schema).forEach(function (key) {
     var schemaProp = schema[key];
     var property = {};
@@ -164,6 +183,29 @@ Model.cast = function (models) {
   }
 
   return models;
+};
+
+/**
+ * Returns a function that iterates
+ * over the properties of a schema, listing
+ * property names on the _attributes object
+ */
+Model.fields = function (schema) {
+  return function () {
+    var pk = this.prototype._primaryKey;
+    var fields = Object.keys(schema)
+      .map(function (key) {
+        var schemaProp = schema[key];
+        if (schemaProp.fieldName) {
+          key = schemaProp.fieldName;
+        }
+        return key;
+      });
+    if (pk) {
+      fields.push(pk);
+    }
+    return fields;
+  };
 };
 
 
