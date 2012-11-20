@@ -193,13 +193,19 @@ Model.cast = function (models) {
 Model.fields = function (schema) {
   return function () {
     var pk = this.prototype._primaryKey;
-    var fields = Object.keys(schema)
-      .map(function (key) {
+    var fields = [];
+    Object.keys(schema)
+      .forEach(function (key) {
         var schemaProp = schema[key];
         if (schemaProp.fieldName) {
           key = schemaProp.fieldName;
         }
-        return key;
+        else if (schemaProp.virtual) {
+          key = undefined;
+        }
+        if (key) {
+          fields.push(key);
+        }
       });
     if (pk) {
       fields.push(pk);

@@ -314,7 +314,8 @@ describe('VoltronModel', function () {
       var constructor = function ModelFn () {};
       Model = VoltronModel.define(constructor, {
         name: { fieldName: 'fullName' },
-        age: {}
+        age: {},
+        virtualField: { virtual: 'test' }
       }, {primaryKey: 'modelId'});
     });
 
@@ -322,12 +323,17 @@ describe('VoltronModel', function () {
       var fields = Model.fields();
       assert.ok(fields.indexOf('fullName') > -1);
       assert.ok(fields.indexOf('age') > -1);
-      assert.ok(fields.indexOf('name') === -1);
+      assert.ok(fields.indexOf('name') < 0);
     });
 
     it('should return the name of the primaryKey field', function () {
       var fields = Model.fields();
       assert.ok(fields.indexOf('modelId') > -1);
+    });
+
+    it('should ignore virtual fields', function () {
+      var fields = Model.fields();
+      assert.ok(fields.indexOf('virtualField') < 0);
     });
   });
 
