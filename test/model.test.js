@@ -191,7 +191,7 @@ describe('VoltronModel', function () {
         }
       };
       VoltronModel.applySchemaToModel(schema, model);
-      assert.ok(model.name);
+      var name = model.name;
       assert.ok(getter.calledOnce);
     });
 
