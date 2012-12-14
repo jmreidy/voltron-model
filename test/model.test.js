@@ -391,14 +391,10 @@ describe('VoltronModel', function () {
     });
 
     describe('#fieldNameFor', function () {
-      it('should return the field name for the named property', function () {
-
-      });
+      it('should return the field name for the named property');
 
       describe('if passed \'id\'', function () {
-        it('should return the name of the primarykey / id field', function () {
-
-        });
+        it('should return the name of the primarykey / id field');
       });
     });
 
