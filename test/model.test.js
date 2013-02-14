@@ -355,6 +355,24 @@ describe('VoltronModel', function () {
 
         assert.equal(model._attributes.name, 'Boy Blue');
       });
+
+      it('should emit a \'change\' event', function () {
+        var listener = sinon.spy();
+        model.on('change', listener);
+        model.set('name', 'Boy Blue');
+
+        assert.equal(listener.called, true);
+        assert.ok(listener.calledWith(model));
+      });
+
+      it('should emit a \'change:<propertyName>\' event', function () {
+        var listener = sinon.spy();
+        model.on('change:name', listener);
+        model.set('name', 'Boy Blue');
+
+        assert.equal(listener.called, true);
+        assert.ok(listener.calledWith(model, 'Boy Blue'));
+      });
     });
 
     describe('#get', function () {
@@ -390,17 +408,7 @@ describe('VoltronModel', function () {
       });
     });
 
-    describe('#fieldNameFor', function () {
-      it('should return the field name for the named property');
-
-      describe('if passed \'id\'', function () {
-        it('should return the name of the primarykey / id field');
-      });
-    });
-
-
     describe('#update', function () {
-
       it('should return a promise', function (done) {
         model.update()
           .then(function () {

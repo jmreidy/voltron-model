@@ -1,5 +1,6 @@
 var VoltronHooks = require('voltron-hooks');
 var Q = require('q');
+var EventEmitter = require('events').EventEmitter;
 
 module.exports = Model;
 Model.Types = require('./lib/types');
@@ -214,8 +215,7 @@ Model.fields = function (schema) {
   };
 };
 
-
-Object.defineProperties(Model.prototype, {
+Model.prototype = Object.create(EventEmitter.prototype, {
   id: {
     get: function () {
       var key;
@@ -244,6 +244,8 @@ Object.defineProperties(Model.prototype, {
   set: {
     value: function (attr, value) {
       this._attributes[attr] = value;
+      this.emit('change', this);
+      this.emit('change:'+attr, this, value);
     }
   },
   getVirtual: {
@@ -254,6 +256,8 @@ Object.defineProperties(Model.prototype, {
   setVirtual: {
     value: function (attr, value) {
       this._virtuals[attr] = value;
+      this.emit('change', this);
+      this.emit('change:'+attr, this, value);
     }
   },
   update: {
