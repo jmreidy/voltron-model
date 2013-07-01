@@ -23,6 +23,5 @@
     "sinon": "1.4.x"
   },
   "author": "Justin Reidy <jmreidy@rzrsharp.net> (http://rzrsharp.net)",
-  "license": "MIT",
-  "private": true
+  "license": "MIT"
 }
