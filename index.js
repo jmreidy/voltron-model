@@ -18,12 +18,15 @@ var updateAttributes = function (self, newAttrs) {
     });
   }
 };
-var updateId = function (model, Model, item) {
-  if (Model.prototype._primaryKey) {
-    var pk = Model.prototype._primaryKey;
-    if (item.id) {
-      model.set(pk, item.id);
-    }
+var updateId = function (model, item) {
+  if (!item) { throw new Error('Must provide a new id') }
+  var id = item.id ? item.id : item;
+  if (model._primaryKey) {
+    var pk = model._primaryKey;
+    model.set(pk, id);
+  }
+  else {
+    model.set('id', id);
   }
 };
 
@@ -172,7 +175,7 @@ Model.cast = function (models) {
   var castModel = function (item) {
     var model = new Self();
     updateAttributes(model, item);
-    updateId(model, Self, item);
+    updateId(model, item);
     return model;
   };
 
@@ -264,6 +267,11 @@ Model.prototype = Object.create(EventEmitter.prototype, {
     value: function (newAttrs) {
       updateAttributes(this, newAttrs);
       return Q.when(this);
+    }, writable: true
+  },
+  updateId: {
+    value: function (newId) {
+      updateId(this, newId);
     }, writable: true
   },
   inspect: {

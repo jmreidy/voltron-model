@@ -464,6 +464,47 @@ describe('VoltronModel', function () {
 
     });
 
+    describe('#updateId', function () {
+      var Model;
+      var model;
+
+      context('if the model has a primary key defined', function () {
+        beforeEach(function () {
+          var constructor = function ModelFn () {};
+          Model = VoltronModel.define(constructor, {
+            name: {},
+            age: {}
+          }, {
+            primaryKey: 'modelId'
+          });
+          model = new Model({modelId: 5, name: 'Abe', age: 82});
+        });
+
+        it('should update the model\'s id', function () {
+          model.updateId(10);
+          assert.equal(model.id, 10);
+        });
+      });
+
+      context('if the model does not have a primary key defined', function () {
+        beforeEach(function () {
+          var constructor = function ModelFn () {};
+          Model = VoltronModel.define(constructor, {
+            name: {},
+            age: {}
+          });
+          model = new Model({id: 5, name: 'Abe', age: 82});
+        })
+
+        it('should update the model\'s id', function () {
+          model.updateId(10);
+          assert.equal(model.id, 10);
+        });
+      });
+
+
+    });
+
     describe('#id getter', function () {
 
       it('should return a defined primaryKey value from _attributes', function () {

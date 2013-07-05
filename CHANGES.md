@@ -32,3 +32,7 @@ automatically cast values in setters before writing to `_attributes` hash.
 * Update package dependencies
 
 * Making Voltron Models into EventEmitters
+
+## 0.1.9
+
+* Make `updateId` method callable for all model instances
