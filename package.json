@@ -14,7 +14,7 @@
     "model"
   ],
   "dependencies": {
-    "voltron-hooks": "git://github.com/jmreidy/voltron-hooks.git#master",
+    "voltron-hooks": "1.0.0",
     "moment": "~1.7.2",
     "q": "~0.8.11"
   },
