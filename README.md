@@ -147,7 +147,7 @@ or by other library.
 
 ## License
 The MIT License (MIT)
-Copyright &copy; 2012 Justin Reidy, http://rzrsharp.net
+Copyright &copy; 2012-3 Justin Reidy, http://rzrsharp.net
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

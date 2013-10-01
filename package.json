@@ -14,13 +14,13 @@
     "model"
   ],
   "dependencies": {
-    "voltron-hooks": "1.0.0",
-    "moment": "~1.7.2",
-    "q": "~0.8.11"
+    "voltron-hooks": "~1.0.0",
+    "moment": "~2.2.1",
+    "q": "~0.9.7"
   },
   "devDependencies": {
-    "mocha": "1.4.x",
-    "sinon": "1.4.x"
+    "mocha": "~1.13",
+    "sinon": "~1.7.3"
   },
   "author": "Justin Reidy <jmreidy@rzrsharp.net> (http://rzrsharp.net)",
   "license": "MIT"
