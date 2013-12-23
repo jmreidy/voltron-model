@@ -22,7 +22,7 @@ var updateAttributes = function (self, newAttrs) {
   }
 };
 var updateId = function (model, item) {
-  if (!item) { throw new Error('Must provide a new id') }
+  if (!item) { throw new Error('Must provide a new id'); }
   var id = item.id ? item.id : item;
   if (model._primaryKey) {
     var pk = model._primaryKey;
