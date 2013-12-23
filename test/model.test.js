@@ -462,6 +462,35 @@ describe('VoltronModel', function () {
 
       });
 
+      context('if a whitelist is provided', function () {
+
+        beforeEach(function () {
+          var constructor = function ModelFn () {};
+          Model = VoltronModel.define(constructor, {
+            name: {},
+            age: {}
+          }, {whitelist: ['name']});
+          model = new Model({name: 'Abe', age: 82});
+        });
+
+        it('updates whitelisted attributes', function (done) {
+          model.update({name: 'Frank'})
+            .then(function () {
+              assert.equal(model.name, 'Frank');
+            })
+            .nodeify(done);
+        });
+
+        it('ignores attributes that aren\'t whitelisted', function (done) {
+          model.update({age: 52})
+            .then(function () {
+              assert.equal(model.age, 82);
+            })
+            .nodeify(done);
+        });
+
+      });
+
     });
 
     describe('#updateId', function () {
@@ -494,7 +523,7 @@ describe('VoltronModel', function () {
             age: {}
           });
           model = new Model({id: 5, name: 'Abe', age: 82});
-        })
+        });
 
         it('should update the model\'s id', function () {
           model.updateId(10);

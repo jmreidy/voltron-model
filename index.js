@@ -13,6 +13,9 @@ var updateAttributes = function (self, newAttrs) {
   if (newAttrs) {
     Object.keys(self).map(function (key) {
       if (newAttrs.hasOwnProperty(key)) {
+        if (self._whitelist && self._whitelist.indexOf(key) === -1) {
+          return;
+        }
         self[key] = newAttrs[key];
       }
     });
@@ -71,8 +74,15 @@ Model.define = function (constructor, schema, options) {
 
   if (options && options.hasOwnProperty('primaryKey')) {
     Object.defineProperty(Fn.prototype, '_primaryKey', {
-        value: options.primaryKey,
-        enumerable: false
+      value: options.primaryKey,
+      enumerable: false
+    });
+  }
+
+  if (options && options.hasOwnProperty('whitelist')) {
+    Object.defineProperty(Fn.prototype, '_whitelist', {
+      value: options.whitelist,
+      enumerable: false
     });
   }
 
