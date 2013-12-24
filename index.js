@@ -13,13 +13,16 @@ var updateAttributes = function (self, newAttrs) {
   if (newAttrs) {
     Object.keys(self).map(function (key) {
       if (newAttrs.hasOwnProperty(key)) {
+        if (self._whitelist && self._whitelist.indexOf(key) === -1) {
+          return;
+        }
         self[key] = newAttrs[key];
       }
     });
   }
 };
 var updateId = function (model, item) {
-  if (!item) { throw new Error('Must provide a new id') }
+  if (!item) { throw new Error('Must provide a new id'); }
   var id = item.id ? item.id : item;
   if (model._primaryKey) {
     var pk = model._primaryKey;
@@ -71,8 +74,15 @@ Model.define = function (constructor, schema, options) {
 
   if (options && options.hasOwnProperty('primaryKey')) {
     Object.defineProperty(Fn.prototype, '_primaryKey', {
-        value: options.primaryKey,
-        enumerable: false
+      value: options.primaryKey,
+      enumerable: false
+    });
+  }
+
+  if (options && options.hasOwnProperty('whitelist')) {
+    Object.defineProperty(Fn.prototype, '_whitelist', {
+      value: options.whitelist,
+      enumerable: false
     });
   }
 

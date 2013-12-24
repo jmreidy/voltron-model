@@ -105,6 +105,11 @@ defined as the boolean `false`, the model `id` will return `undefined`. The valu
 is defined on instances as a non-enumerable property `_primaryKey`, which can be changed on
 the instance in application code.
 
+`whitelist`: Define a list of attributes that can be updated via a model's `update` call. Generally,
+calling `update` on a model iterates over a provided dictonary and calls the coressponding setters on the receiving model.
+If a model has been defined with a whitelist (in the form of an array of strings), then ONLY the whitelisted attributes
+will be updated.
+
 
 ## API
 
@@ -141,7 +146,6 @@ each data hash.
 
 ## Roadmap
 
-* Configure `beforeUpdate` hook to work with callbacks in addition to promises.
 * Note that validation will be added as a separate component of voltron.io, voltron-validator,
 or by other library.
 

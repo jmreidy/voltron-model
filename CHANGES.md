@@ -36,3 +36,11 @@ automatically cast values in setters before writing to `_attributes` hash.
 ## 0.1.9
 
 * Make `updateId` method callable for all model instances
+
+## 0.1.10, 0.1.11
+
+* Update dependencies
+
+## 0.1.12
+
+* Add `whitelist` option for updating attributes
